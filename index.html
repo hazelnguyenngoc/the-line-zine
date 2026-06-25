@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Line. — Dial Zine</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --c0:#4A6FA5; --c1:#5B8A8A; --c2:#6FA896; --c3:#B8A552;
+  --c4:#D4845A; --c5:#D4685A; --c6:#9B6BA5;
+  --bg:#F2EDE6; --ink:#1a1a1a; --orange:#E76F51;
+  --mono:'Space Mono',monospace; --body:'Inter',sans-serif;
+}
+
+/* ── Page base ── */
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+/* ── Gradient background ── */
+.bg-gradient {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 50% at 85% 5%, rgba(160,200,195,0.45) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 10% 90%, rgba(210,195,175,0.35) 0%, transparent 65%),
+    #F2EDE6;
+  transition: background 0.8s ease;
+}
+
+/* ── LANDING ── */
+#landing {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 480px;
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 52px 28px 48px;
+  transition: opacity 0.4s ease;
+}
+
+.header-eyebrow {
+  font-family: var(--mono); font-size: 9px;
+  letter-spacing: 0.22em; color: #999;
+  text-transform: uppercase; margin-bottom: 10px; text-align: center;
+}
+.header-title {
+  font-family: var(--mono); font-size: 46px; font-weight: 700;
+  line-height: 1; text-align: center; letter-spacing: -0.01em;
+  margin-bottom: 10px;
+}
+.header-title .dot { color: var(--orange); }
+.header-sub {
+  font-family: var(--mono); font-size: 9px; font-weight: 400;
+  color: #888; text-align: center; letter-spacing: 0.2em;
+  text-transform: uppercase; margin-bottom: 44px;
+}
+
+/* ── Dial ── */
+.dial-wrap { position: relative; width: 280px; height: 280px; margin-bottom: 18px; }
+.dial-face {
+  width: 280px; height: 280px; border-radius: 50%;
+  background: radial-gradient(circle at 42% 38%, #eae6e0, #cec8c0);
+  box-shadow:
+    inset 0 3px 10px rgba(255,255,255,0.65),
+    inset 0 -4px 14px rgba(0,0,0,0.12),
+    0 8px 40px rgba(0,0,0,0.13);
+  position: relative;
+}
+.dial-face.spinning { animation: dialSpin 0.65s cubic-bezier(0.25,0.46,0.45,0.94); }
+@keyframes dialSpin {
+  0%   { transform: rotate(0deg); }
+  40%  { transform: rotate(-38deg); }
+  100% { transform: rotate(0deg); }
+}
+.dial-numbers { position: absolute; inset: 0; border-radius: 50%; }
+/* Finger stop tick at top */
+.dial-tick {
+  position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+  width: 4px; height: 18px; background: var(--orange); border-radius: 2px;
+  z-index: 2;
+}
+.dial-hole {
+  position: absolute; width: 44px; height: 44px; border-radius: 50%;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: transform 0.12s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18), inset 0 1px 3px rgba(255,255,255,0.2);
+}
+.dial-hole:hover { transform: scale(1.1) !important; }
+.dial-hole span {
+  font-family: var(--mono); font-size: 14px; font-weight: 700;
+  color: rgba(255,255,255,0.92); pointer-events: none;
+}
+.dial-center {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 72px; height: 72px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #dedad4, #c4bfb8);
+  box-shadow:
+    inset 0 2px 5px rgba(255,255,255,0.55),
+    inset 0 -2px 6px rgba(0,0,0,0.15);
+  display: flex; align-items: center; justify-content: center;
+}
+.dial-center-text {
+  font-family: var(--mono); font-size: 6.5px; font-weight: 400;
+  color: #999; letter-spacing: 0.08em; text-align: center; line-height: 1.5;
+  text-transform: uppercase;
+}
+
+/* ── Landing instruction ── */
+.dial-instruction {
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.2em;
+  color: #aaa; text-transform: uppercase; text-align: center;
+  margin-bottom: 44px;
+}
+
+/* ── Guide list ── */
+.guide-header {
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.2em;
+  color: #bbb; text-transform: uppercase;
+  width: 100%; margin-bottom: 12px;
+}
+.guide-list { width: 100%; }
+.guide-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.07);
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.guide-row:last-child { border-bottom: none; }
+.guide-row:hover { opacity: 0.7; }
+.guide-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.guide-num { font-family: var(--mono); font-size: 10px; color: #bbb; width: 12px; flex-shrink: 0; }
+.guide-label { font-family: var(--body); font-size: 13px; font-weight: 400; color: #444; flex: 1; }
+.guide-arrow { font-family: var(--mono); font-size: 11px; color: #ccc; }
+
+/* ── CONTENT PAGE ── */
+#content-page {
+  display: none; position: relative; z-index: 1;
+  width: 100%; max-width: 480px;
+  min-height: 100vh; flex-direction: column;
+  padding-bottom: 90px;
+}
+
+.cp-header {
+  padding: 36px 28px 22px; position: relative; overflow: hidden;
+}
+.cp-eyebrow {
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.22em;
+  color: #999; text-transform: uppercase; margin-bottom: 10px;
+}
+.cp-title {
+  font-family: var(--body); font-size: 28px; font-weight: 600;
+  line-height: 1.2; color: #111; max-width: 280px;
+}
+.cp-title-underline {
+  height: 2.5px; width: 52px; border-radius: 2px; margin-top: 10px;
+  background: var(--orange);
+}
+.cp-dial-ghost {
+  position: absolute; top: 18px; right: 18px;
+  font-family: var(--mono); font-size: 100px; font-weight: 700;
+  color: rgba(0,0,0,0.055); line-height: 1;
+  pointer-events: none; user-select: none;
+}
+.cp-divider { height: 1px; background: rgba(0,0,0,0.09); margin: 0 0 0 0; }
+
+.cp-body { padding: 26px 28px; }
+.cp-body p { font-size: 14px; line-height: 1.78; color: #333; margin-bottom: 18px; }
+.cp-body strong { font-weight: 600; color: #111; }
+.pull-quote {
+  font-family: var(--body); font-size: 13px; font-style: italic;
+  line-height: 1.65; color: #555;
+  border-left: 3px solid var(--orange);
+  padding: 10px 16px; margin: 20px 0;
+  background: rgba(231,111,81,0.04);
+  border-radius: 0 4px 4px 0;
+}
+
+/* ── 4-card grid (concept page) ── */
+.card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 22px 0 26px; }
+.concept-card {
+  background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 10px; padding: 14px 14px 16px;
+}
+.concept-card .card-label {
+  font-family: var(--mono); font-size: 9px; font-weight: 700;
+  letter-spacing: 0.15em; color: var(--orange);
+  text-transform: uppercase; margin-bottom: 7px;
+}
+.concept-card .card-body {
+  font-family: var(--mono); font-size: 10px; color: #666;
+  line-height: 1.65; font-weight: 400;
+}
+
+/* ── Dial on concept page ── */
+.concept-dial-wrap {
+  position: relative; width: 220px; height: 220px;
+  margin: 0 auto 24px;
+}
+.concept-dial-face {
+  width: 220px; height: 220px; border-radius: 50%;
+  background: radial-gradient(circle at 42% 38%, #e8e4de, #c8c2b8);
+  box-shadow:
+    inset 0 2px 8px rgba(255,255,255,0.55),
+    inset 0 -3px 10px rgba(0,0,0,0.12),
+    0 4px 20px rgba(0,0,0,0.12);
+  position: relative;
+}
+.concept-dial-tick {
+  position: absolute; top: 5px; left: 50%; transform: translateX(-50%);
+  width: 3px; height: 14px; background: var(--orange); border-radius: 2px; z-index: 2;
+}
+.concept-dial-center {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 58px; height: 58px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #dedad4, #c4bfb8);
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.5), inset 0 -2px 5px rgba(0,0,0,0.12);
+  display: flex; align-items: center; justify-content: center;
+}
+.concept-dial-center-text {
+  font-family: var(--mono); font-size: 6px; color: #aaa;
+  text-align: center; line-height: 1.5; text-transform: uppercase;
+}
+.concept-hole {
+  position: absolute; width: 32px; height: 32px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #555, #1a1a1a);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.8), 0 1px 3px rgba(0,0,0,0.35);
+  display: flex; align-items: center; justify-content: center;
+}
+.concept-hole span {
+  font-family: var(--mono); font-size: 11px; font-weight: 700;
+  color: rgba(255,255,255,0.82);
+}
+
+/* ── Step rows ── */
+.step-row { display: flex; gap: 14px; margin-bottom: 15px; align-items: flex-start; }
+.step-num { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--orange); flex-shrink: 0; margin-top: 2px; }
+.step-text { font-size: 13.5px; line-height: 1.68; color: #333; }
+
+/* ── Journey diagram (vertical flow) ── */
+.journey {
+  position: relative;
+  margin: 24px 0 22px;
+  padding-left: 4px;
+}
+.journey-line {
+  position: absolute;
+  top: 22px; bottom: 22px; left: 23px;
+  width: 2px;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.14) 0px, rgba(0,0,0,0.14) 4px,
+    transparent 4px, transparent 9px
+  );
+}
+.journey-node {
+  position: relative;
+  display: flex; align-items: flex-start; gap: 16px;
+  padding-bottom: 30px;
+}
+.journey-node:last-child { padding-bottom: 0; }
+.jn-icon {
+  position: relative; z-index: 1;
+  width: 46px; height: 46px; border-radius: 50%;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.16), inset 0 1px 2px rgba(255,255,255,0.25);
+}
+.jn-icon svg { width: 20px; height: 20px; }
+.jn-text { padding-top: 6px; }
+.jn-name {
+  font-family: var(--mono); font-size: 13px; font-weight: 700;
+  color: #111; margin-bottom: 5px; letter-spacing: 0.02em;
+}
+.jn-desc {
+  font-size: 13px; line-height: 1.62; color: #555;
+}
+
+/* ── Tags ── */
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.tag {
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.1em;
+  color: #999; background: rgba(0,0,0,0.055);
+  padding: 4px 9px; border-radius: 20px; text-transform: uppercase;
+}
+
+/* ── Mechanism: two-column comparison (Dial 4) ── */
+.mech-cols {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  margin: 22px 0 20px;
+}
+.mech-col {
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  padding: 14px 13px 16px;
+  display: flex; flex-direction: column;
+}
+.mech-col-head {
+  display: flex; align-items: center; gap: 8px;
+  padding-bottom: 10px; margin-bottom: 12px;
+  border-bottom: 2px solid;
+}
+.mech-col-icon {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.mech-col-icon svg { width: 14px; height: 14px; }
+.mech-col-title {
+  font-family: var(--mono); font-size: 13px; font-weight: 700;
+  color: #111; letter-spacing: 0.02em;
+}
+.mech-col-sub {
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.08em;
+  color: #999; text-transform: uppercase; margin-bottom: 12px;
+}
+
+.band-chip {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.band-chip:last-of-type { border-bottom: none; }
+.band-swatch {
+  width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
+  box-shadow: inset 0 1px 2px rgba(255,255,255,0.3), 0 1px 2px rgba(0,0,0,0.1);
+}
+.band-label {
+  font-family: var(--mono); font-size: 11px; font-weight: 700;
+  color: #333; flex-shrink: 0; min-width: 30px;
+}
+.band-desc {
+  font-size: 11.5px; color: #666; line-height: 1.4;
+}
+
+.mech-col-note {
+  font-size: 12px; line-height: 1.6; color: #555;
+  margin-top: 12px; padding-top: 12px;
+  border-top: 1px dashed rgba(0,0,0,0.1);
+}
+
+.mech-receipt {
+  display: flex; align-items: flex-start; gap: 7px;
+  margin-top: 12px; padding-top: 12px;
+  border-top: 1px dashed rgba(0,0,0,0.1);
+}
+.receipt-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #4A6FA5; flex-shrink: 0; margin-top: 4px;
+}
+.receipt-text {
+  font-family: var(--mono); font-size: 10px; line-height: 1.55;
+  color: #777;
+}
+
+/* ── Mechanism: flow strip ── */
+.mech-flow {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; margin: 26px 0 24px;
+  padding: 18px 10px;
+  background: rgba(0,0,0,0.03);
+  border-radius: 12px;
+}
+.flow-step { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.flow-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: #fff; border: 1px solid rgba(0,0,0,0.1);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 11px; font-weight: 700; color: #444;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+.flow-label {
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.06em;
+  color: #888; text-transform: uppercase; text-align: center;
+}
+.flow-arrow {
+  font-size: 16px; color: #bbb; flex-shrink: 0;
+  padding-bottom: 18px;
+}
+
+/* ── Mechanism: equation ── */
+.mech-equation {
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; margin: 0 0 4px;
+  flex-wrap: wrap;
+}
+.eq-item {
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  width: 84px;
+}
+.eq-icon {
+  width: 38px; height: 38px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+.eq-icon svg { width: 17px; height: 17px; }
+.eq-text {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  text-align: center;
+}
+.eq-text strong {
+  font-family: var(--mono); font-size: 10.5px; font-weight: 700; color: #111;
+}
+.eq-text span {
+  font-size: 9.5px; color: #888; line-height: 1.3;
+}
+.eq-op {
+  font-family: var(--mono); font-size: 16px; color: #ccc;
+  flex-shrink: 0; padding-bottom: 24px;
+}
+.eq-result .eq-icon { box-shadow: 0 3px 10px rgba(155,107,165,0.35); }
+
+@media (max-width: 380px) {
+  .mech-cols { grid-template-columns: 1fr; }
+  .mech-equation { gap: 4px; }
+  .eq-item { width: 72px; }
+  .eq-op { font-size: 14px; }
+}
+
+/* ── Video link ── */
+.video-link {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; background: rgba(255,255,255,0.55);
+  border-radius: 10px; text-decoration: none; color: #333;
+  border: 1px solid rgba(0,0,0,0.08); margin: 16px 0;
+  transition: background 0.15s;
+}
+.video-link:hover { background: rgba(255,255,255,0.85); }
+.video-play {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--orange); display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.video-play svg { width: 13px; height: 13px; fill: #fff; margin-left: 2px; }
+.video-text { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; color: #666; }
+
+/* ── Team ── */
+.team-member {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 13.5px; font-weight: 400; color: #333;
+  padding: 13px 0; border-bottom: 1px solid rgba(0,0,0,0.07);
+}
+.team-member a.li-link {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.1em;
+  color: #0077B5; text-decoration: none;
+  background: rgba(0,119,181,0.08); border: 1px solid rgba(0,119,181,0.2);
+  padding: 4px 9px; border-radius: 20px;
+  transition: background 0.15s;
+  white-space: nowrap; flex-shrink: 0;
+}
+.team-member a.li-link:hover { background: rgba(0,119,181,0.18); }
+.team-member a.li-link::before {
+  content: 'in'; font-weight: 700; font-size: 9px;
+  background: #0077B5; color: #fff;
+  border-radius: 2px; padding: 0 2px;
+  line-height: 14px; display: inline-block; height: 14px;
+}
+
+/* ── Bottom nav ── */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 480px;
+  background: rgba(242,237,230,0.92); backdrop-filter: blur(14px);
+  border-top: 1px solid rgba(0,0,0,0.07);
+  padding: 10px 22px; display: none; align-items: center;
+  justify-content: space-between; z-index: 100;
+}
+.nav-dots { display: flex; flex-direction: row; gap: 7px; align-items: center; }
+.bdot {
+  width: 9px; height: 9px; border-radius: 50%; opacity: 0.3;
+  cursor: pointer; transition: opacity 0.2s, transform 0.2s;
+}
+.bdot.active { opacity: 1; transform: scale(1.35); }
+.nav-btns { display: flex; gap: 7px; align-items: center; }
+.nav-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(0,0,0,0.07); border: none; cursor: pointer;
+  font-size: 15px; display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s; color: #444; font-family: var(--body);
+}
+.nav-btn:hover { background: rgba(0,0,0,0.13); }
+.mini-dial-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #e0dcd6, #b0aaa0);
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: inset 0 1px 3px rgba(255,255,255,0.5),
+              inset 0 -1px 3px rgba(0,0,0,0.15),
+              0 2px 6px rgba(0,0,0,0.13);
+  transition: transform 0.1s;
+}
+.mini-dial-btn:hover { transform: scale(1.08); }
+</style>
+</head>
+<body>
+
+<div class="bg-gradient" id="bgGradient"></div>
+
+<!-- ══ LANDING ══ -->
+<div id="landing">
+  <div class="header-eyebrow">Music Box &middot; Digital Experience Design</div>
+  <div class="header-title">THE LINE<span class="dot">.</span></div>
+  <div class="header-sub">Dial into how you feel</div>
+
+  <div class="dial-wrap">
+    <div class="dial-face" id="dialFace">
+      <div class="dial-tick"></div>
+      <div class="dial-numbers" id="dialNumbers"></div>
+      <div class="dial-center">
+        <div class="dial-center-text">LISTEN<br>BEFORE<br>CALLING</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dial-instruction">Pull dial to a number &middot; then release</div>
+
+  <div class="guide-header">What's on each dial</div>
+  <div class="guide-list" id="guideList"></div>
+</div>
+
+<!-- ══ CONTENT PAGE ══ -->
+<div id="content-page">
+  <div class="cp-header">
+    <div class="cp-eyebrow" id="cpEyebrow"></div>
+    <div class="cp-title" id="cpTitle"></div>
+    <div class="cp-title-underline" id="cpUnderline"></div>
+    <div class="cp-dial-ghost" id="cpGhost"></div>
+  </div>
+  <div class="cp-divider"></div>
+  <div class="cp-body" id="cpBody"></div>
+</div>
+
+<!-- ══ BOTTOM NAV ══ -->
+<div class="bottom-nav" id="bottomNav">
+  <div class="nav-dots" id="bottomDots"></div>
+  <div class="nav-btns">
+    <button class="mini-dial-btn" onclick="goHome()" title="Back to home">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+           stroke="#777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9"/>
+        <circle cx="12" cy="12" r="3.5" fill="#777" stroke="none"/>
+        <line x1="12" y1="3" x2="12" y2="1"/>
+      </svg>
+    </button>
+    <button class="nav-btn" onclick="goPrev()">←</button>
+    <button class="nav-btn" onclick="goNext()">→</button>
+  </div>
+</div>
+
+<script>
+/* ── Palette ── */
+const COLORS = {
+  0:'#4A6FA5', 1:'#5B8A8A', 2:'#6FA896',
+  3:'#B8A552', 4:'#D4845A', 5:'#D4685A', 6:'#9B6BA5'
+};
+const LABELS = {
+  0:'The Problem', 1:'The Concept', 2:'The People',
+  3:'How It Works', 4:'The Mechanism', 5:'Try It', 6:'The Team'
+};
+
+/* ── Journey diagram colours (drawn from the dial palette) ── */
+const COLORS_3 = [COLORS[0], COLORS[1], COLORS[2], COLORS[6]];
+
+/* ── Content ── */
+const CONTENT = {
+  0:{
+    eyebrow:'Dial 0 · The Problem',
+    title:'A silent burden',
+    body:`<p>Over <strong>2.65 million Australians</strong> provide unpaid care to family members living with disability, chronic illness, or age-related needs. Most are invisible to the systems meant to support them.</p>
+<div class="pull-quote">"I'm so used to carrying it that I don't even notice the weight anymore."<br>— Caregiver interview, 2024</div>
+<p>Caregivers report high rates of emotional exhaustion, social isolation, and difficulty naming — let alone processing — their own feelings. The emotional labour is constant, and the outlets are few.</p>
+<p>Traditional mental health tools ask caregivers to <em>explain</em> how they feel. But when you're depleted, language is the first thing to go.</p>
+<div class="tag-row"><div class="tag">2.65M unpaid carers · AU</div><div class="tag">Emotional labour</div><div class="tag">Invisible burden</div></div>`
+  },
+  1:{
+    eyebrow:'Dial 1 · The Concept',
+    title:'A line to yourself',
+    body:`<div class="concept-dial-wrap" id="conceptDialWrap">
+  <div class="concept-dial-face">
+    <div class="concept-dial-tick"></div>
+    <div id="conceptHoles"></div>
+    <div class="concept-dial-center">
+      <div class="concept-dial-center-text">JUST<br>FEEL.</div>
+    </div>
+  </div>
+</div>
+<div class="card-grid">
+  <div class="concept-card">
+    <div class="card-label">Pick Up</div>
+    <div class="card-body">reach out.<br>no words needed.</div>
+  </div>
+  <div class="concept-card">
+    <div class="card-label">Dial</div>
+    <div class="card-body">choose your feeling.<br>language without language.</div>
+  </div>
+  <div class="concept-card">
+    <div class="card-label">Release</div>
+    <div class="card-body">let go.<br>the line holds it.</div>
+  </div>
+  <div class="concept-card">
+    <div class="card-label">Just Be</div>
+    <div class="card-body">presence without performance.</div>
+  </div>
+</div>
+<p>Picking up a phone to call someone is a universal act of reaching out. The interaction has a <strong>start and an end</strong> — a natural container that brings a sense of connection without needing to say anything before you're ready.</p>
+<p>For caregivers, that act carries a hidden cost. <strong>To call is to explain. To explain requires energy.</strong></p>
+<div class="pull-quote">"The Line. carries the same feeling of reaching out, but without the burden of exposure."</div>`
+  },
+  2:{
+    eyebrow:'Dial 2 · The People',
+    title:'Who we heard',
+    body:`<p>We conducted <strong>10 semi-structured interviews</strong> with informal caregivers across Australia — partners, adult children, and parents caring for loved ones with chronic conditions, disability, or age-related needs.</p>
+<div class="step-row"><div class="step-num">01.</div><div class="step-text"><strong>They rarely talk about themselves.</strong> Every interview began with caregivers describing their loved one's condition. Redirecting the conversation took effort.</div></div>
+<div class="step-row"><div class="step-num">02.</div><div class="step-text"><strong>Language fails under load.</strong> Participants consistently struggled to name emotions. "I don't know, I just feel… grey." Music and colour emerged as proxies.</div></div>
+<div class="step-row"><div class="step-num">03.</div><div class="step-text"><strong>Isolation compounds everything.</strong> Most felt no one in their life truly understood the role. Community — even anonymous — was a recurring need.</div></div>
+<div class="step-row"><div class="step-num">04.</div><div class="step-text"><strong>Low-friction mattered.</strong> Apps requiring journaling or daily commitment were abandoned quickly. "I don't have 20 minutes. I have 90 seconds."</div></div>
+<a class="video-link" href="https://youtu.be/J3m1mVVQW9U" target="_blank">
+  <div class="video-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+  <div class="video-text">Watch · Through their eyes</div>
+</a>
+<div class="tag-row"><div class="tag">10 interviews</div><div class="tag">Grounded theory</div><div class="tag">Affective insight</div></div>`
+  },
+  3:{
+    eyebrow:'Dial 3 · How It Works',
+    title:'Four spaces',
+    body:`<p>The Line. is structured as four interconnected spaces, each serving a distinct emotional function in the caregiver's journey.</p>
+<div class="journey">
+  <div class="journey-line"></div>
+
+  <div class="journey-node">
+    <div class="jn-icon" style="background:${COLORS_3[0]}"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.4" fill="#fff" stroke="none"/><line x1="12" y1="3" x2="12" y2="5.5"/></svg></div>
+    <div class="jn-text"><div class="jn-name">01 &middot; Dial</div><div class="jn-desc">Select a number from 1&ndash;9 for your current emotional state. Each maps to a colour, a tempo, and an ambient soundscape that begins immediately.</div></div>
+  </div>
+
+  <div class="journey-node">
+    <div class="jn-icon" style="background:${COLORS_3[1]}"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c4-3 7-6.5 7-10.5A7 7 0 0 0 5 10.5C5 14.5 8 18 12 21Z"/><circle cx="12" cy="10" r="2.4" fill="#fff" stroke="none"/></svg></div>
+    <div class="jn-text"><div class="jn-name">02 &middot; Dialogue</div><div class="jn-desc">Type or speak freely &mdash; or simply listen. The system reads your full entry and generates a personalised soundscape visualised as colour, shifting in real time as you write.</div></div>
+  </div>
+
+  <div class="journey-node">
+    <div class="jn-icon" style="background:${COLORS_3[2]}"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="7" r="1.8"/><circle cx="19" cy="8" r="1.6"/><circle cx="6" cy="18" r="1.6"/></svg></div>
+    <div class="jn-text"><div class="jn-name">03 &middot; Echo</div><div class="jn-desc">A shared space to feel the anonymous presence of others. No words, no response required. Each person is represented as a floating bubble &mdash; tapping one transitions the music smoothly into their sound, keeping the experience uninterrupted.</div></div>
+  </div>
+
+  <div class="journey-node">
+    <div class="jn-icon" style="background:${COLORS_3[3]}"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="16" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="12" y2="17"/></svg></div>
+    <div class="jn-text"><div class="jn-name">04 &middot; Memo</div><div class="jn-desc">Your personal archive. Each check-in is saved as music, colour, and keywords &mdash; a quiet record of where you&rsquo;ve been.</div></div>
+  </div>
+</div>
+<div class="tag-row" style="margin-top:4px;"><div class="tag">Experience-centred</div><div class="tag">Emotional journey</div><div class="tag">Four spaces</div></div>`
+  },
+  4:{
+    eyebrow:'Dial 4 · The Mechanism',
+    title:'Colour & Music',
+    body:`<p>Every check-in produces two outputs at once — a colour and a soundscape. Both start from the dial, then shift as you write.</p>
+
+<div class="mech-cols">
+  <div class="mech-col">
+    <div class="mech-col-head" style="border-color:#4A6FA5;">
+      <div class="mech-col-icon" style="background:#4A6FA5;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16 4 4 0 0 1 0-8 2 2 0 0 0 0-4 4 4 0 0 1 0-4Z" fill="#fff" stroke="none" opacity="0.85"/></svg>
+      </div>
+      <div class="mech-col-title">Colour</div>
+    </div>
+    <div class="mech-col-sub">The dial sets the base colour</div>
+    <div class="band-chip"><span class="band-swatch" style="background:#4A6FA5;"></span><span class="band-label">1&ndash;3</span><span class="band-desc">cool blues &amp; teals &mdash; heavy</span></div>
+    <div class="band-chip"><span class="band-swatch" style="background:#C9A24B;"></span><span class="band-label">4&ndash;5</span><span class="band-desc">amber &amp; sage &mdash; neutral</span></div>
+    <div class="band-chip"><span class="band-swatch" style="background:#5FA66B;"></span><span class="band-label">6&ndash;9</span><span class="band-desc">green, orange, coral &mdash; alive</span></div>
+    <div class="mech-col-note">Your words shift it &mdash; the AI detects the emotional mix in your entry and blends a unique hex code, weighted by how much of each emotion came through.</div>
+    <div class="mech-receipt">
+      <span class="receipt-dot"></span>
+      <span class="receipt-text">Saved to Memo as the colour of that day's disc</span>
+    </div>
+  </div>
+
+  <div class="mech-col">
+    <div class="mech-col-head" style="border-color:#D4685A;">
+      <div class="mech-col-icon" style="background:#D4685A;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg>
+      </div>
+      <div class="mech-col-title">Music</div>
+    </div>
+    <div class="mech-col-sub">The dial sets the soundscape</div>
+    <div class="band-chip"><span class="band-swatch" style="background:#4A6FA5;"></span><span class="band-label">38</span><span class="band-desc">BPM &middot; minor, dissonant</span></div>
+    <div class="band-chip"><span class="band-swatch" style="background:#C9A24B;"></span><span class="band-label">58</span><span class="band-desc">BPM &middot; open fifths</span></div>
+    <div class="band-chip"><span class="band-swatch" style="background:#5FA66B;"></span><span class="band-label">82</span><span class="band-desc">BPM &middot; warm major harmonics</span></div>
+    <div class="mech-col-note">Every bubble in Echo has its own voice &mdash; different root pitch, chord colour, and waveform, even at the same emotional line.</div>
+    <div class="mech-receipt">
+      <span class="receipt-dot" style="background:#D4685A;"></span>
+      <span class="receipt-text">Reconstructed live in Memo &mdash; not a recording, the same parameters replayed</span>
+    </div>
+  </div>
+</div>
+
+<div class="mech-flow">
+  <div class="flow-step"><div class="flow-icon">0&ndash;9</div><div class="flow-label">Dial</div></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-step"><div class="flow-icon">Aa</div><div class="flow-label">Your words</div></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-step"><div class="flow-icon">✦</div><div class="flow-label">Colour + Sound</div></div>
+</div>
+
+<div class="mech-equation">
+  <div class="eq-item">
+    <div class="eq-icon" style="background:#4A6FA5;"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/></svg></div>
+    <div class="eq-text"><strong>Colour</strong><span>what you saw</span></div>
+  </div>
+  <div class="eq-op">+</div>
+  <div class="eq-item">
+    <div class="eq-icon" style="background:#D4685A;"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.2"/><circle cx="16.5" cy="16" r="2.2"/></svg></div>
+    <div class="eq-text"><strong>Music</strong><span>what you couldn't name</span></div>
+  </div>
+  <div class="eq-op">=</div>
+  <div class="eq-item eq-result">
+    <div class="eq-icon" style="background:#9B6BA5;"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5" fill="#fff" stroke="none"/></svg></div>
+    <div class="eq-text"><strong>A portrait</strong><span>neither could hold alone</span></div>
+  </div>
+</div>
+
+<div class="tag-row" style="margin-top:6px;"><div class="tag">Web Audio API</div><div class="tag">Affective computing</div><div class="tag">Circumplex model</div></div>`
+  },
+  5:{
+    eyebrow:'Dial 5 · Try It',
+    title:'The Line. live',
+    body:`<p>Experience the full interactive prototype — dial your emotional state, enter the journal space, and listen to the Echo community.</p>
+<a class="video-link" href="https://claude.ai/public/artifacts/f9cc9a66-0270-4fd2-ab96-c23a0d47ca52" target="_blank">
+  <div class="video-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+  <div class="video-text">Open · The Line. live prototype</div>
+</a>
+<p>Built as a single-file web app using HTML, CSS, and the Web Audio API. No install required — runs entirely in your browser.</p>
+<div class="step-row"><div class="step-num">01.</div><div class="step-text">Dial a number from 0–6 to set your emotional state.</div></div>
+<div class="step-row"><div class="step-num">02.</div><div class="step-text">Enter the Journal space and let the colour breathe with you.</div></div>
+<div class="step-row"><div class="step-num">03.</div><div class="step-text">Visit Echo to hear other caregivers — anonymously, through sound.</div></div>
+<div class="step-row"><div class="step-num">04.</div><div class="step-text">Check Memo to revisit your emotional history as sound portraits.</div></div>
+<p>You don't need to explain it. The system holds it for you.</p>`
+  },
+  6:{
+    eyebrow:'Dial 6 · The Team',
+    title:'Music Box, Team 5',
+    body:`<p>Developed as part of <strong>Experience-Centred Design</strong> coursework and presented at The Line exhibition.</p>
+<div class="team-member"><span>Hazel Nguyen</span><a class="li-link" href="https://www.linkedin.com/in/hien-nguyen11" target="_blank" rel="noopener">LinkedIn</a></div>
+<div class="team-member"><span>Ara Lee</span><a class="li-link" href="https://www.linkedin.com/in/ara-lee-06b543376/" target="_blank" rel="noopener">LinkedIn</a></div>
+<div class="team-member"><span>Elva Yaputra</span><a class="li-link" href="https://www.linkedin.com/in/elvayaputra" target="_blank" rel="noopener">LinkedIn</a></div>
+<div class="team-member"><span>Sukanya Sripanha</span><a class="li-link" href="https://www.linkedin.com/in/sukanya-sripanha-1b5aa01a3" target="_blank" rel="noopener">LinkedIn</a></div>
+<div class="team-member" style="border:none;"><span>Rhea Guo</span><a class="li-link" href="https://www.linkedin.com/in/yuxin-guo-14943b339" target="_blank" rel="noopener">LinkedIn</a></div>
+<p style="margin-top:24px;">Grounded in 10 user interviews and academic research across music psychology, affective computing, and ECD methodology.</p>
+<div class="tag-row" style="margin-top:10px;"><div class="tag">ECD · McCARTHY &amp; WRIGHT 2004</div><div class="tag">AFFECTIVE COMPUTING</div><div class="tag">MUSIC PSYCHOLOGY</div></div>`
+  }
+};
+
+/* ── Build landing dial (coloured holes 0–6) ── */
+const dialNumbers = document.getElementById('dialNumbers');
+const guideList   = document.getElementById('guideList');
+const bottomDots  = document.getElementById('bottomDots');
+
+const dialSlots = [0,1,2,3,4,5,6];
+const R = 100, CX = 140, CY = 140;
+
+dialSlots.forEach((n, i) => {
+  const angle = (i / dialSlots.length) * 2 * Math.PI - Math.PI/2 + 0.18;
+  const x = CX + R * Math.cos(angle) - 22;
+  const y = CY + R * Math.sin(angle) - 22;
+  const hole = document.createElement('div');
+  hole.className = 'dial-hole';
+  hole.style.left = x + 'px';
+  hole.style.top  = y + 'px';
+  hole.style.background = COLORS[n];
+  hole.innerHTML = `<span>${n}</span>`;
+  hole.addEventListener('click', () => dialTo(n));
+  dialNumbers.appendChild(hole);
+});
+
+/* ── Build guide list ── */
+for (let n = 0; n <= 6; n++) {
+  const row = document.createElement('div');
+  row.className = 'guide-row';
+  row.innerHTML = `
+    <div class="guide-dot" style="background:${COLORS[n]}"></div>
+    <div class="guide-num">${n}</div>
+    <div class="guide-label">${LABELS[n]}</div>
+    <div class="guide-arrow">→</div>`;
+  row.addEventListener('click', () => dialTo(n));
+  guideList.appendChild(row);
+}
+
+/* ── Build bottom dots ── */
+for (let n = 0; n <= 6; n++) {
+  const d = document.createElement('div');
+  d.className = 'bdot';
+  d.id = `bdot-${n}`;
+  d.style.background = COLORS[n];
+  d.title = LABELS[n];
+  d.addEventListener('click', () => dialTo(n));
+  bottomDots.appendChild(d);
+}
+
+/* ── Build concept dial (dark holes 0–9) ── */
+function buildConceptDial() {
+  const wrap = document.getElementById('conceptHoles');
+  if (!wrap) return;
+  const nums = [1,2,3,4,5,6,7,8,9,0];
+  const R2 = 78, CX2 = 110, CY2 = 110;
+  nums.forEach((n, i) => {
+    const angle = (i / nums.length) * 2 * Math.PI - Math.PI/2 + 0.18;
+    const x = CX2 + R2 * Math.cos(angle) - 16;
+    const y = CY2 + R2 * Math.sin(angle) - 16;
+    const h = document.createElement('div');
+    h.className = 'concept-hole';
+    h.style.left = x + 'px';
+    h.style.top  = y + 'px';
+    h.style.position = 'absolute';
+    h.innerHTML = `<span>${n}</span>`;
+    wrap.appendChild(h);
+  });
+}
+
+/* ── State ── */
+let currentDial = null;
+
+function dialTo(n) {
+  const face    = document.getElementById('dialFace');
+  const landing = document.getElementById('landing');
+  const cp      = document.getElementById('content-page');
+
+  face.classList.remove('spinning');
+  void face.offsetWidth;
+  face.classList.add('spinning');
+
+  document.querySelectorAll('.bdot').forEach(d => d.classList.remove('active'));
+  const dot = document.getElementById(`bdot-${n}`);
+  if (dot) dot.classList.add('active');
+
+  currentDial = n;
+
+  setTimeout(() => {
+    landing.style.opacity = '0';
+    setTimeout(() => {
+      landing.style.display = 'none';
+
+      const d = CONTENT[n];
+      document.getElementById('cpEyebrow').textContent  = d.eyebrow;
+      document.getElementById('cpTitle').textContent    = d.title;
+      document.getElementById('cpGhost').textContent    = n;
+      document.getElementById('cpUnderline').style.background = COLORS[n];
+      document.getElementById('cpBody').innerHTML       = d.body;
+
+      cp.style.display  = 'flex';
+      cp.style.opacity  = '0';
+      cp.style.transition = 'opacity 0.35s';
+
+      if (n === 1) {
+        setTimeout(() => buildConceptDial(), 50);
+      }
+
+      setTimeout(() => { cp.style.opacity = '1'; }, 20);
+      document.getElementById('bottomNav').style.display = 'flex';
+
+      // scroll to top
+      window.scrollTo(0, 0);
+    }, 280);
+  }, 80);
+}
+
+function goHome() {
+  const landing = document.getElementById('landing');
+  const cp      = document.getElementById('content-page');
+  cp.style.opacity = '0';
+  setTimeout(() => {
+    cp.style.display = 'none';
+    document.getElementById('bottomNav').style.display = 'none';
+    landing.style.display  = 'flex';
+    landing.style.opacity  = '0';
+    landing.style.transition = 'opacity 0.35s';
+    setTimeout(() => { landing.style.opacity = '1'; }, 20);
+    currentDial = null;
+    window.scrollTo(0, 0);
+  }, 280);
+}
+
+function goPrev() {
+  if (currentDial === null) return;
+  if (currentDial === 0) { goHome(); return; }
+  dialTo(currentDial - 1);
+}
+
+function goNext() {
+  if (currentDial === null || currentDial === 6) return;
+  dialTo(currentDial + 1);
+}
+</script>
+</body>
+</html>
